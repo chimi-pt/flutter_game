@@ -46,6 +46,9 @@ class Player extends SpriteGroupComponent<PlayerState>
   Future<void> onLoad() async {
     await super.onLoad();
 
+    await _loadCharacterSprites();
+    current = PlayerState.center;
+
     // Core gameplay: Add circle hitbox to Dash
 
     // Add a Player to the game: loadCharacterSprites
@@ -54,15 +57,27 @@ class Player extends SpriteGroupComponent<PlayerState>
 
   @override
   void update(double dt) {
+    if (gameRef.gameManager.isIntro || gameRef.gameManager.isGameOver) return;
+    _velocity.x = _hAxisInput * jumpSpeed;
     // Add a Player to the game: Add game state check
 
     // Add a Player to the game: Add calcualtion for Dash's horizontal velocity
 
     final double dashHorizontalCenter = size.x / 2;
 
+    if (position.x < dashHorizontalCenter) {
+      position.x = gameRef.size.x - (dashHorizontalCenter);
+    }
+    if (position.x > gameRef.size.x - (dashHorizontalCenter)) {
+      position.x = dashHorizontalCenter;
+    }
+
     // Add a Player to the game: Add infinite side boundaries logic
 
     // Core gameplay: Add gravity
+
+    position += _velocity * dt;
+    super.update(dt);
 
     // Add a Player to the game: Calculate Dash's current position based on
     // her velocity over elapsed time since last update cycle
@@ -73,6 +88,18 @@ class Player extends SpriteGroupComponent<PlayerState>
   bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     _hAxisInput = 0;
 
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
+      moveLeft();
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight)) {
+      moveRight();
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp)) {
+      // jump();
+    }
+
     // Add a Player to the game: Add keypress logic
 
     return true;
@@ -81,11 +108,18 @@ class Player extends SpriteGroupComponent<PlayerState>
   void moveLeft() {
     _hAxisInput = 0;
 
+    current = PlayerState.left;
+
+    _hAxisInput += movingLeftInput;
+
     // Add a Player to the game: Add logic for moving left
   }
 
   void moveRight() {
     _hAxisInput = 0;
+
+    current = PlayerState.right;
+    _hAxisInput += movingRightInput;
 
     // Add a Player to the game: Add logic for moving right
   }
