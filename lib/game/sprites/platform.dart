@@ -73,6 +73,7 @@ class NormalPlatform extends Platform<NormalPlatformState> {
 
     size = spriteOptions[randSprite]!;
     await super.onLoad();
+    //minor
   }
 }
 
