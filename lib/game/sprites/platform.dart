@@ -73,7 +73,7 @@ class NormalPlatform extends Platform<NormalPlatformState> {
 
     size = spriteOptions[randSprite]!;
     await super.onLoad();
-    //minor
+    //minor change to the hitbox
   }
 }
 
