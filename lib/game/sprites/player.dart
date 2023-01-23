@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 
 import '../doodle_dash.dart';
 // Core gameplay: Import sprites.dart
+import 'sprites.dart';
 
 enum PlayerState {
   left,
@@ -41,6 +42,7 @@ class Player extends SpriteGroupComponent<PlayerState>
   Character character;
   double jumpSpeed;
   // Core gameplay: Add _gravity property
+final double _gravity = 9; 
 
   @override
   Future<void> onLoad() async {
@@ -50,6 +52,7 @@ class Player extends SpriteGroupComponent<PlayerState>
     current = PlayerState.center;
 
     // Core gameplay: Add circle hitbox to Dash
+    await add(CircleHitbox()); 
 
     // Add a Player to the game: loadCharacterSprites
     // Add a Player to the game: Default Dash onLoad to center state
@@ -75,6 +78,7 @@ class Player extends SpriteGroupComponent<PlayerState>
     // Add a Player to the game: Add infinite side boundaries logic
 
     // Core gameplay: Add gravity
+    _velocity.y += _gravity;
 
     position += _velocity * dt;
     super.update(dt);
