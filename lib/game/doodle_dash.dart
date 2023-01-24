@@ -150,6 +150,7 @@ class DoodleDash extends FlameGame
       objectManager.configure(levelManager.level, levelManager.difficulty);
 
       // Core gameplay: Call setJumpSpeed
+       player.setJumpSpeed(levelManager.jumpSpeed);
     }
   }
 }
