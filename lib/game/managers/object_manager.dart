@@ -26,32 +26,32 @@ class ObjectManager extends Component with HasGameRef<DoodleDash> {
   final List<Platform> _platforms = [];
 
   // Add Platforms: Add onMount method
-  @override                                                   // Add lines from here...
- void onMount() {
-   super.onMount();
+  @override // Add lines from here...
+  void onMount() {
+    super.onMount();
 
-   var currentX = (gameRef.size.x.floor() / 2).toDouble() - 50;
+    var currentX = (gameRef.size.x.floor() / 2).toDouble() - 50;
 
-   var currentY =
-       gameRef.size.y - (_rand.nextInt(gameRef.size.y.floor()) / 3) - 50;
+    var currentY =
+        gameRef.size.y - (_rand.nextInt(gameRef.size.y.floor()) / 3) - 50;
 
-   for (var i = 0; i < 9; i++) {
-     if (i != 0) {
-       currentX = _generateNextX(100);
-       currentY = _generateNextY();
-     }
-     _platforms.add(
-       _semiRandomPlatform(
-         Vector2(
-           currentX,
-           currentY,
-         ),
-       ),
-     );
+    for (var i = 0; i < 9; i++) {
+      if (i != 0) {
+        currentX = _generateNextX(100);
+        currentY = _generateNextY();
+      }
+      _platforms.add(
+        _semiRandomPlatform(
+          Vector2(
+            currentX,
+            currentY,
+          ),
+        ),
+      );
 
-     add(_platforms[i]);
-   }
- }                       
+      add(_platforms[i]);
+    }
+  }
 
   // Add Platforms: Add update method
   @override
@@ -63,22 +63,22 @@ class ObjectManager extends Component with HasGameRef<DoodleDash> {
         (gameRef.size.x / 2) +
         gameRef.screenBufferSpace;
 
-        if (topOfLowestPlatform > screenBottom) {
-          var newPlatY = _generateNextY();
-     var newPlatX = _generateNextX(100);
-     final nextPlat = _semiRandomPlatform(Vector2(newPlatX, newPlatY));
-     add(nextPlat);
+    if (topOfLowestPlatform > screenBottom) {
+      var newPlatY = _generateNextY();
+      var newPlatX = _generateNextX(100);
+      final nextPlat = _semiRandomPlatform(Vector2(newPlatX, newPlatY));
+      add(nextPlat);
 
-     _platforms.add(nextPlat);
+      _platforms.add(nextPlat);
 
-     gameRef.gameManager.increaseScore();
+      gameRef.gameManager.increaseScore();
 
-     _cleanupPlatforms();
-     // Losing the game: Add call to _maybeAddEnemy()
-     // Powerups: Add call to _maybeAddPowerup();
-   }
+      _cleanupPlatforms();
+      // Losing the game: Add call to _maybeAddEnemy()
+      // Powerups: Add call to _maybeAddPowerup();
+    }
 
-   super.update(dt);
+    super.update(dt);
   }
 
   final Map<String, bool> specialPlatforms = {
@@ -102,6 +102,14 @@ class ObjectManager extends Component with HasGameRef<DoodleDash> {
   void enableLevelSpecialty(int level) {
     // More on Platforms: Add switch statement to enable SpringBoard for
     // level 1 and BrokenPlatform for level 2
+    switch (level) {
+      case 1:
+        enableSpecialty('spring');
+        break;
+      case 2:
+        enableSpecialty('broken');
+        break;
+    }
   }
 
   void resetSpecialties() {
@@ -153,6 +161,16 @@ class ObjectManager extends Component with HasGameRef<DoodleDash> {
 
   // Add platforms: Add _semiRandomPlatform method
   Platform _semiRandomPlatform(Vector2 position) {
+    if (specialPlatforms['spring'] == true &&
+        probGen.generateWithProbability(15)) {
+      return SpringBoard(position: position);
+    }
+
+    if (specialPlatforms['broken'] == true &&
+        probGen.generateWithProbability(10)) {
+      return BrokenPlatform(position: position);
+    }
+
     return NormalPlatform(position: position);
   }
 

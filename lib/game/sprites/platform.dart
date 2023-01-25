@@ -44,8 +44,28 @@ abstract class Platform<T> extends SpriteGroupComponent<T>
   }
 
   // More on Platforms: Add _move method
+  void _move(double dt) {
+    if (!isMoving) return;
+
+    final double gameWidth = gameRef.size.x;
+
+    if (position.x <= 0) {
+      direction = 1;
+    } else if (position.x >= gameWidth - size.x) {
+      direction = -1;
+    }
+
+    _velocity.x = direction * speed;
+
+    position += _velocity * dt;
+}
 
   // More on Platforms: Override update method
+  @override
+void update(double dt) {
+  _move(dt);
+  super.update(dt);
+}
 }
 
 // Add platforms: Add NormalPlatformState Enum
