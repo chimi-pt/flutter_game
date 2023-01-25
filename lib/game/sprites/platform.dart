@@ -80,10 +80,73 @@ class NormalPlatform extends Platform<NormalPlatformState> {
 // Add platforms: Add NormalPlatform class
 
 // More on Platforms: Add BrokenPlatform State Enum
+enum BrokenPlatformState { cracked, broken }
+
+class BrokenPlatform extends Platform<BrokenPlatformState> {
+  BrokenPlatform({super.position});
+
+  @override
+  Future<void>? onLoad() async {
+    await super.onLoad();
+
+    sprites = <BrokenPlatformState, Sprite>{
+      BrokenPlatformState.cracked:
+          await gameRef.loadSprite('game/platform_cracked_monitor.png'),
+      BrokenPlatformState.broken:
+          await gameRef.loadSprite('game/platform_monitor_broken.png'),
+    };
+
+    current = BrokenPlatformState.cracked;
+    size = Vector2(115, 84);
+  }
+
+  void breakPlatform() {
+    current = BrokenPlatformState.broken;
+  }
+}
 
 // More on Platforms: Add BrokenPlatform class
 
 // More on Platforms: Add Add Spring State Enum
+enum SpringState { down, up }
+
+class SpringBoard extends Platform<SpringState> {
+  SpringBoard({super.position});
+
+  @override
+  Future<void>? onLoad() async {
+    await super.onLoad();
+
+    sprites = <SpringState, Sprite>{
+      SpringState.down:
+          await gameRef.loadSprite('game/platform_trampoline_down.png'),
+      SpringState.up:
+          await gameRef.loadSprite('game/platform_trampoline_up.png'),
+    };
+    current = SpringState.up;
+    size = Vector2(100, 45);
+
+  }
+  @override
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+
+    bool isCollidingVertically =
+        (intersectionPoints.first.y - intersectionPoints.last.y).abs() < 5;
+
+    if (isCollidingVertically) {
+      current = SpringState.down;
+    }
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+
+    current = SpringState.up;
+  }
+}
 
 // More on Platforms: Add SpringBoard Platform class
 
