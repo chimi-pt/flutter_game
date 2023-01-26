@@ -41,8 +41,8 @@ abstract class Platform<T> extends SpriteGroupComponent<T>
     await add(hitbox);
 
     // More on Platforms: Set isMoving
-    final int rand = Random().nextInt(100);                            
-  if (rand > 80) isMoving = true;   
+    final int rand = Random().nextInt(100);
+    if (rand > 80) isMoving = true;
   }
 
   // More on Platforms: Add _move method
@@ -60,14 +60,14 @@ abstract class Platform<T> extends SpriteGroupComponent<T>
     _velocity.x = direction * speed;
 
     position += _velocity * dt;
-}
+  }
 
   // More on Platforms: Override update method
   @override
-void update(double dt) {
-  _move(dt);
-  super.update(dt);
-}
+  void update(double dt) {
+    _move(dt);
+    super.update(dt);
+  }
 }
 
 // Add platforms: Add NormalPlatformState Enum
@@ -147,8 +147,8 @@ class SpringBoard extends Platform<SpringState> {
     };
     current = SpringState.up;
     size = Vector2(100, 45);
-
   }
+
   @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -173,5 +173,10 @@ class SpringBoard extends Platform<SpringState> {
 // More on Platforms: Add SpringBoard Platform class
 
 // Losing the game: Add EnemyPlatformState Enum
+enum EnemyPlatformState { only }
+
+class EnemyPlatform extends Platform<EnemyPlatformState> {
+  EnemyPlatform({super.position});
+}
 
 // Losing the game: Add EnemyPlatform class
