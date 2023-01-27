@@ -72,6 +72,7 @@ class DoodleDash extends FlameGame
         camera.followComponent(player);
       }
       // Losing the game: Add the first loss condition.
+      
       // Game over if Dash falls off screen!
       if(player.position.y >
       camera.position.y +
