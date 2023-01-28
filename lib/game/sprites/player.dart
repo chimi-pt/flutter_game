@@ -139,29 +139,36 @@ class Player extends SpriteGroupComponent<PlayerState>
   // Powerups: Add isWearingHat getter
 
   // Core gameplay: Override onCollision callback
- @override
- void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-   super.onCollision(intersectionPoints, other);
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollision(intersectionPoints, other);
 
-   bool isCollidingVertically =
-       (intersectionPoints.first.y - intersectionPoints.last.y).abs() < 5;
+    if (other is EnemyPlatform) {
+      // Add lines from here...
+      gameRef.onLose();
+      return;
+    }
 
-   if (isMovingDown && isCollidingVertically) {
-     current = PlayerState.center;
-     if (other is NormalPlatform) {
-       jump();
-       return;
-     } else if (other is SpringBoard) {                      // Add lines from here...
-       jump(specialJumpSpeed: jumpSpeed * 2);
-       return;
-     } else if (other is BrokenPlatform &&
-         other.current == BrokenPlatformState.cracked) {
-       jump();
-       other.breakPlatform();
-       return;
-     }                                                                 // ... to here.
-   }
- }
+    bool isCollidingVertically =
+        (intersectionPoints.first.y - intersectionPoints.last.y).abs() < 5;
+
+    if (isMovingDown && isCollidingVertically) {
+      current = PlayerState.center;
+      if (other is NormalPlatform) {
+        jump();
+        return;
+      } else if (other is SpringBoard) {
+        // Add lines from here...
+        jump(specialJumpSpeed: jumpSpeed * 2);
+        return;
+      } else if (other is BrokenPlatform &&
+          other.current == BrokenPlatformState.cracked) {
+        jump();
+        other.breakPlatform();
+        return;
+      } // ... to here.
+    }
+  }
 
   // Core gameplay: Add a jump method
   void jump({double? specialJumpSpeed}) {
